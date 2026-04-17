@@ -2,17 +2,18 @@
 
 set -euo pipefail
 
-REPOSITORY=${REPO:?REPO is required, for example owner/name}
+ORGANIZATION=${ORG:?ORG is required, for example my-org}
 ACCESS_TOKEN=${TOKEN:?TOKEN is required}
 RUNNER_ROOT=/home/docker/actions-runner
 RUNNER_NAME=${RUNNER_NAME:-$(hostname)}
 RUNNER_LABELS=${RUNNER_LABELS:-}
+RUNNER_GROUP=${RUNNER_GROUP:-}
 RUNNER_WORKDIR=${RUNNER_WORKDIR:-_work}
-API_URL="https://api.github.com/repos/${REPOSITORY}/actions/runners"
-RUNNER_URL="https://github.com/${REPOSITORY}"
+API_URL="https://api.github.com/orgs/${ORGANIZATION}/actions/runners"
+RUNNER_URL="https://github.com/${ORGANIZATION}"
 CONFIGURED=false
 
-echo "Configuring runner for ${REPOSITORY} as ${RUNNER_NAME}"
+echo "Configuring org runner for ${ORGANIZATION} as ${RUNNER_NAME}"
 
 get_runner_token() {
     local token_type=$1
@@ -55,6 +56,10 @@ config_args=(
 
 if [[ -n "${RUNNER_LABELS}" ]]; then
     config_args+=(--labels "${RUNNER_LABELS}")
+fi
+
+if [[ -n "${RUNNER_GROUP}" ]]; then
+    config_args+=(--runnergroup "${RUNNER_GROUP}")
 fi
 
 ./config.sh "${config_args[@]}"
