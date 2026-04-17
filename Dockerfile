@@ -1,13 +1,13 @@
 FROM ghcr.io/weebit-nano/ubuntu:24.04
 
-ARG RUNNER_VERSION="2.294.0"
+ARG RUNNER_VERSION="2.333.1"
 
 # Prevents installdependencies.sh from prompting the user and blocking the image creation
 ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt update -y && apt upgrade -y && useradd -m docker
 RUN apt install -y --no-install-recommends \
-    curl jq build-essential libssl-dev libffi-dev python3 python3-venv python3-dev python3-pip
+    curl jq build-essential libicu74 libssl-dev libffi-dev python3 python3-venv python3-dev python3-pip
 
 
 RUN cd /home/docker && mkdir actions-runner && cd actions-runner \
