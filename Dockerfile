@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ghcr.io/weebit-nano/ubuntu:24.04
 
 ARG RUNNER_VERSION="2.294.0"
 

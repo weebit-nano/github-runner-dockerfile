@@ -1,4 +1,4 @@
-name: Django CI
+name: Build and push Docker image
 
 on:
   push:
@@ -7,20 +7,35 @@ on:
     branches: [ "main" ]
 
 jobs:
-  docker:
+  build-and-publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      REGISTRY: ghcr.io
+      OWNER: ${{ github.repository_owner }}
+      TAG_LATEST: latest
+      TAG_SHA: sha-${{ github.sha }}
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
-      - name: Login to DockerHub
-        uses: docker/login-action@v2
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
-        uses: docker/build-push-action@v3
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build & push
+        uses: docker/build-push-action@v7
         with:
+          context: .
+          file: Dockerfile
           push: true
-          tags: dockerbeikeni/github-runner-02
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.OWNER }}/weebit-github-runner:${{ env.TAG_LATEST }}
+            ${{ env.REGISTRY }}/${{ env.OWNER }}/weebit-github-runner:${{ env.TAG_SHA }}
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,mode=max,scope=web

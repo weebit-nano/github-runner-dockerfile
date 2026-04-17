@@ -1,0 +1,12 @@
+This repository is an internal proprietary fork of software originally released
+under the MIT License.
+
+Upstream project: github-runner-dockerfile
+Original author: Alessandro Baccini
+Original copyright: Copyright (c) 2022 Alessandro Baccini
+
+The original MIT license text is preserved in the LICENSE file in this
+repository and must be included with copies or substantial portions of the
+software.
+
+This repository may also contain additional proprietary modifications.
